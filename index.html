@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f8fc">
+  <title>Clínica Serena | Panel hospitalario</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#" aria-label="Clínica Serena, inicio">
+        <span class="brand-mark" aria-hidden="true">+</span>
+        <span><strong>serena</strong><small>Centro médico</small></span>
+      </a>
+
+      <p class="nav-caption">MENÚ PRINCIPAL</p>
+      <nav class="navigation">
+        <button class="nav-link is-active" type="button" data-view="inicio">
+          <span class="nav-icon" aria-hidden="true">⌂</span> Resumen
+        </button>
+        <button class="nav-link" type="button" data-view="pacientes">
+          <span class="nav-icon" aria-hidden="true">♧</span> Pacientes
+        </button>
+        <button class="nav-link" type="button" data-view="doctores">
+          <span class="nav-icon" aria-hidden="true">⚕</span> Doctores
+        </button>
+        <button class="nav-link" type="button" data-view="hospitales">
+          <span class="nav-icon" aria-hidden="true">⌂</span> Clínicas
+        </button>
+        <button class="nav-link" type="button" data-view="citas">
+          <span class="nav-icon" aria-hidden="true">▦</span> Citas
+        </button>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="note-icon" aria-hidden="true">✦</span>
+        <strong>Atención con calma</strong>
+        <p>Una experiencia de salud más humana, cada día.</p>
+      </div>
+      <div class="profile">
+        <span class="avatar avatar-teal">CS</span>
+        <span><strong>Clínica Serena</strong><small>Administración</small></span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">CENTRO MÉDICO · PANEL DE CONTROL</p>
+          <h1 id="page-title">Buenos días <span aria-hidden="true">☀</span></h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="today-label" id="today-label"></span>
+          <button class="button button-primary" type="button" data-open-view="citas">
+            <span aria-hidden="true">＋</span> Nueva cita
+          </button>
+        </div>
+      </header>
+
+      <div id="app-alert" class="app-alert" role="alert" hidden></div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+      <section class="view is-visible" id="view-inicio" aria-labelledby="overview-title">
+        <div class="welcome-card">
+          <div>
+            <p class="eyebrow">TU CLÍNICA, EN UN SOLO LUGAR</p>
+            <h2 id="overview-title">Cuidar empieza con una buena organización.</h2>
+            <p>Consulta la actividad y gestiona la atención de hoy.</p>
+          </div>
+          <div class="welcome-art" aria-hidden="true">
+            <span class="art-circle"></span><span class="art-cross">+</span>
+            <span class="art-leaf">✳</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span class="stat-icon icon-lilac" aria-hidden="true">♧</span>
+            <div><p>Pacientes registrados</p><strong id="stat-patients">—</strong><small>En el sistema</small></div>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon icon-blue" aria-hidden="true">▦</span>
+            <div><p>Citas de hoy</p><strong id="stat-appointments">—</strong><small>Programadas</small></div>
+          </article>
+          <article class="stat-card">
+            <span class="stat-icon icon-green" aria-hidden="true">⚕</span>
+            <div><p>Doctores disponibles</p><strong id="stat-doctors">—</strong><small>Libres o en línea</small></div>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <section class="panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">AGENDA</p><h2>Próximas citas</h2></div>
+              <button class="text-button" type="button" data-open-view="citas">Ver agenda <span aria-hidden="true">→</span></button>
+            </div>
+            <div id="overview-appointments" class="appointment-preview"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">EQUIPO MÉDICO</p><h2>Doctores disponibles</h2></div>
+              <button class="text-button" type="button" data-open-view="doctores">Ver equipo <span aria-hidden="true">→</span></button>
+            </div>
+            <div id="overview-doctors" class="doctor-preview"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-pacientes" aria-labelledby="patients-title" hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">GESTIÓN DE PACIENTES</p><h2 id="patients-title">Pacientes</h2><p>Registra y mantén actualizada la información de tus pacientes.</p></div>
+          <button class="button button-primary" type="button" data-focus-form="patient-name">＋ Registrar paciente</button>
+        </div>
+        <div class="management-layout">
+          <section class="panel form-panel">
+            <div class="panel-heading"><div><p class="eyebrow">FICHA PERSONAL</p><h3 id="patient-form-title">Nuevo paciente</h3></div></div>
+            <form id="patient-form">
+              <input type="hidden" id="patient-id">
+              <label for="patient-name">Nombre completo</label>
+              <input id="patient-name" name="nombre" type="text" autocomplete="name" required maxlength="100" placeholder="Ej. Ana Pérez">
+              <label for="patient-document">Documento de identidad</label>
+              <input id="patient-document" name="documento" type="text" required maxlength="30" placeholder="Número de documento">
+              <div class="form-row">
+                <div><label for="patient-birthdate">Fecha de nacimiento</label><input id="patient-birthdate" name="fechaNacimiento" type="date" required></div>
+                <div><label for="patient-phone">Teléfono</label><input id="patient-phone" name="telefono" type="tel" autocomplete="tel" required maxlength="30" placeholder="+1 555 0100"></div>
+              </div>
+              <label for="patient-email">Correo electrónico <span class="optional">(opcional)</span></label>
+              <input id="patient-email" name="correo" type="email" autocomplete="email" maxlength="120" placeholder="paciente@correo.com">
+              <div class="form-actions">
+                <button class="button button-primary" type="submit" id="patient-submit">Guardar paciente</button>
+                <button class="button button-quiet" type="button" id="patient-cancel" hidden>Cancelar</button>
+              </div>
+            </form>
+          </section>
+          <section class="panel table-panel">
+            <div class="panel-heading"><div><p class="eyebrow">DIRECTORIO</p><h3>Pacientes registrados</h3></div><span class="count-pill" id="patient-count">0</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Paciente</th><th>Documento</th><th>Teléfono</th><th>Acciones</th></tr></thead>
+                <tbody id="patients-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-doctores" aria-labelledby="doctors-title" hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">EQUIPO DE SALUD</p><h2 id="doctors-title">Doctores</h2><p>Especialidades, horarios y disponibilidad del equipo médico.</p></div>
+          <button class="button button-primary" type="button" data-focus-form="doctor-name">＋ Registrar doctor</button>
+        </div>
+        <section class="panel doctor-list-panel">
+          <div class="panel-heading doctor-toolbar">
+            <div><p class="eyebrow">DIRECTORIO MÉDICO</p><h3>Profesionales de la salud</h3></div>
+            <label class="filter-label" for="doctor-filter">Mostrar
+              <select id="doctor-filter"><option value="disponibles">Disponibles</option><option value="todos">Todos los doctores</option></select>
+            </label>
+          </div>
+          <div id="doctors-list" class="doctors-grid"></div>
+        </section>
+        <section class="panel doctor-form-panel">
+          <div class="panel-heading"><div><p class="eyebrow">DATOS PROFESIONALES</p><h3 id="doctor-form-title">Registrar doctor</h3></div></div>
+          <form id="doctor-form" class="doctor-form">
+            <input type="hidden" id="doctor-id">
+            <div><label for="doctor-name">Nombre completo</label><input id="doctor-name" type="text" required maxlength="100" placeholder="Ej. Dra. Sofía Torres"></div>
+            <div><label for="doctor-specialty">Especialidad</label><input id="doctor-specialty" type="text" required maxlength="80" placeholder="Ej. Medicina general"></div>
+            <div><label for="doctor-start">Inicio de atención</label><input id="doctor-start" type="time" required value="08:00"></div>
+            <div><label for="doctor-end">Fin de atención</label><input id="doctor-end" type="time" required value="16:00"></div>
+            <div><label for="doctor-status">Estado</label>
+              <select id="doctor-status" required>
+                <option value="libre">Libre</option>
+                <option value="activo">Activo</option>
+                <option value="en_linea">En línea (virtual)</option>
+                <option value="offline">Offline</option>
+                <option value="fuera_de_servicio">Fuera de servicio</option>
+              </select>
+            </div>
+            <div class="doctor-form-actions"><button class="button button-primary" type="submit" id="doctor-submit">Guardar doctor</button><button class="button button-quiet" type="button" id="doctor-cancel" hidden>Cancelar</button></div>
+          </form>
+        </section>
+      </section>
+
+      <section class="view" id="view-citas" aria-labelledby="appointments-title" hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">PLANIFICACIÓN DE ATENCIÓN</p><h2 id="appointments-title">Agenda de citas</h2><p>La cita se confirma solo si el doctor está disponible en ese horario.</p></div>
+        </div>
+        <div class="management-layout appointment-layout">
+          <section class="panel form-panel">
+            <div class="panel-heading"><div><p class="eyebrow">NUEVA RESERVA</p><h3>Programar una cita</h3></div></div>
+            <form id="appointment-form">
+              <label for="appointment-patient">Paciente</label>
+              <select id="appointment-patient" required><option value="">Selecciona un paciente</option></select>
+              <label for="appointment-date">Fecha</label>
+              <input id="appointment-date" type="date" required>
+              <label for="appointment-time">Hora de inicio</label>
+              <input id="appointment-time" type="time" required step="1800">
+              <label for="appointment-doctor">Doctor disponible</label>
+              <select id="appointment-doctor" required><option value="">Selecciona fecha y hora primero</option></select>
+              <p class="form-hint">Cada cita dura 30 minutos. Solo se muestran doctores dentro de su horario y sin cruces.</p>
+              <label for="appointment-reason">Motivo de consulta <span class="optional">(opcional)</span></label>
+              <textarea id="appointment-reason" rows="3" maxlength="250" placeholder="Describe brevemente el motivo"></textarea>
+              <button class="button button-primary button-full" type="submit">Confirmar cita <span aria-hidden="true">→</span></button>
+            </form>
+          </section>
+          <section class="panel table-panel">
+            <div class="panel-heading"><div><p class="eyebrow">HORARIOS RESERVADOS</p><h3>Citas programadas</h3></div><span class="count-pill" id="appointment-count">0</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Fecha y hora</th><th>Paciente</th><th>Doctor</th><th>Acciones</th></tr></thead>
+                <tbody id="appointments-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="view-hospitales" aria-labelledby="hospitals-title" hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">CENTROS DE ATENCIÓN</p><h2 id="hospitals-title">Clínicas y hospitales</h2><p>Registra y administra los centros médicos de tu organización.</p></div>
+          <button class="button button-primary" type="button" data-focus-form="hospital-name">＋ Agregar centro</button>
+        </div>
+        <div class="management-layout">
+          <section class="panel form-panel">
+            <div class="panel-heading"><div><p class="eyebrow">DATOS DEL CENTRO</p><h3 id="hospital-form-title">Agregar clínica u hospital</h3></div></div>
+            <form id="hospital-form">
+              <input type="hidden" id="hospital-id">
+              <label for="hospital-name">Nombre del centro</label>
+              <input id="hospital-name" type="text" required maxlength="120" placeholder="Ej. Clínica Central">
+              <label for="hospital-type">Tipo de centro</label>
+              <select id="hospital-type" required>
+                <option value="Clínica">Clínica</option>
+                <option value="Hospital">Hospital</option>
+                <option value="Centro médico">Centro médico</option>
+              </select>
+              <label for="hospital-address">Dirección</label>
+              <input id="hospital-address" type="text" required maxlength="180" autocomplete="street-address" placeholder="Calle, ciudad y código postal">
+              <label for="hospital-phone">Teléfono de contacto</label>
+              <input id="hospital-phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="+1 555 0100">
+              <label for="hospital-email">Correo electrónico <span class="optional">(opcional)</span></label>
+              <input id="hospital-email" type="email" maxlength="120" autocomplete="email" placeholder="contacto@centro.com">
+              <div class="form-actions">
+                <button class="button button-primary" type="submit" id="hospital-submit">Agregar centro</button>
+                <button class="button button-quiet" type="button" id="hospital-cancel" hidden>Cancelar</button>
+              </div>
+            </form>
+          </section>
+          <section class="panel table-panel">
+            <div class="panel-heading"><div><p class="eyebrow">DIRECTORIO DE CENTROS</p><h3>Clínicas y hospitales registrados</h3></div><span class="count-pill" id="hospital-count">0</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Centro</th><th>Dirección</th><th>Contacto</th><th>Acciones</th></tr></thead>
+                <tbody id="hospitals-table"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </section>
+      <footer class="footer-note">Clínica Serena <span>·</span> Gestión de atención médica</footer>
+    </main>
+  </div>
+</body>
+</html>

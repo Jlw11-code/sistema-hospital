@@ -1,0 +1,9 @@
+{
+  "doctores": [
+    { "id": 1, "nombre": "Dra. Elena Gómez", "especialidad": "Cardiología", "horario": "08:00 - 12:00" },
+    { "id": 2, "nombre": "Dr. Carlos Ruiz", "especialidad": "Pediatría", "horario": "14:00 - 18:00" }
+  ],
+  "hospitales": [],
+  "pacientes": [],
+  "citas": []
+}
